@@ -1,4 +1,4 @@
-# animal_detector.py
+# detect.py
 import torch
 import cv2
 

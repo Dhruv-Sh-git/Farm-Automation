@@ -1,4 +1,4 @@
-# distance_sensor.py
+# distance.py
 import RPi.GPIO as GPIO
 import time
 

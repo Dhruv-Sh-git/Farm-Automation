@@ -1,7 +1,8 @@
 # main.py
 import time
 from distance import get_distance_cm, cleanup
-from animal_detector import detect_animal
+from detect import detect_animal
+from sound import play_animal_sound
 
 DISTANCE_THRESHOLD_CM = 100  # 1 metre
 
@@ -16,7 +17,9 @@ try:
 
         if dist < DISTANCE_THRESHOLD_CM:
             print("🚨 Object within 1 meter!")
-            detect_animal()
+            animal = detect_animal()
+            if animal:
+                play_animal_sound(animal)
             time.sleep(3)  # avoid continuous triggering
 
         time.sleep(0.5)
