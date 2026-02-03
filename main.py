@@ -1,35 +1,26 @@
+# main.py
 import time
-import cv2
-from distance import get_distance
-from detect import detect_animal
-from sound import play_sound
+from distance import get_distance_cm, cleanup
+from animal_detector import detect_animal
 
-print("System started. Waiting for object within 2 meters...")
+DISTANCE_THRESHOLD_CM = 100  # 1 metre
 
-while True:
-    dist = get_distance()
-    print(f"Distance: {dist} m")
+try:
+    while True:
+        dist = get_distance_cm()
 
-    if dist <= 2.0:
-        print("Object detected. Activating camera...")
-        cap = cv2.VideoCapture(0)
-        ret, frame = cap.read()
-        cap.release()
+        if dist is None:
+            continue
 
-        if ret:
-            animal = detect_animal(frame)
+        print(f"Distance: {dist} cm")
 
-            if animal:
-                print(f"{animal.upper()} detected. Playing sound...")
-                play_sound(animal)
-            else:
-                print("No target animal detected")
+        if dist < DISTANCE_THRESHOLD_CM:
+            print("🚨 Object within 1 meter!")
+            detect_animal()
+            time.sleep(3)  # avoid continuous triggering
 
-        time.sleep(1)
+        time.sleep(0.5)
 
-        # Re-check distance
-        if get_distance() > 2.0:
-            print("Object left. Returning to idle state")
-
-    time.sleep(0.5)
-
+except KeyboardInterrupt:
+    print("Stopping system...")
+    cleanup()
